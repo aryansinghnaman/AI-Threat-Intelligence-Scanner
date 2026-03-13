@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>AI Threat Intelligence Scanner</title>
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,Arial;
+}
+
+/* BODY */
+
+body{
+background:#020617;
+color:white;
+min-height:100vh;
+overflow-x:hidden;
+}
+
+/* CYBER GRID BACKGROUND */
+
+body::before{
+content:"";
+position:fixed;
+width:100%;
+height:100%;
+background-image:
+linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+background-size:40px 40px;
+z-index:-1;
+}
+
+/* PRELOADER */
+
+#preloader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#020617;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+}
+
+.loader-title{
+color:#38bdf8;
+font-size:28px;
+letter-spacing:2px;
+margin-bottom:20px;
+}
+
+.progress-container{
+width:350px;
+height:10px;
+background:#1e293b;
+border-radius:20px;
+overflow:hidden;
+}
+
+#progress-bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#38bdf8,#06b6d4);
+}
+
+.loading-text{
+margin-top:15px;
+font-size:14px;
+color:#94a3b8;
+}
+
+/* NAVBAR */
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 50px;
+background:rgba(0,0,0,0.5);
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+nav h2{
+letter-spacing:2px;
+color:#38bdf8;
+}
+
+/* GRID */
+
+.container{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:25px;
+padding:40px;
+}
+
+/* CARD */
+
+.card{
+background:rgba(255,255,255,0.05);
+border-radius:12px;
+padding:25px;
+border:1px solid rgba(255,255,255,0.1);
+}
+
+/* INPUT */
+
+input{
+width:100%;
+padding:14px;
+border:none;
+border-radius:6px;
+margin-top:10px;
+}
+
+/* BUTTON */
+
+button{
+width:100%;
+margin-top:15px;
+padding:14px;
+border:none;
+border-radius:6px;
+background:#38bdf8;
+color:white;
+cursor:pointer;
+}
+
+/* SCAN ANIMATION */
+
+.loader{
+display:none;
+text-align:center;
+margin-top:20px;
+}
+
+.scan-animation{
+width:200px;
+height:200px;
+border:2px solid #38bdf8;
+border-radius:50%;
+margin:20px auto;
+position:relative;
+overflow:hidden;
+}
+
+.scan-line{
+position:absolute;
+width:100%;
+height:3px;
+background:#38bdf8;
+animation:scanMove 2s linear infinite;
+}
+
+@keyframes scanMove{
+0%{top:0;}
+100%{top:100%;}
+}
+
+/* RESULT */
+
+.result{
+margin-top:20px;
+padding:20px;
+background:rgba(255,255,255,0.08);
+border-radius:10px;
+}
+
+/* RISK BAR */
+
+.progress{
+background:#1e293b;
+height:20px;
+border-radius:10px;
+margin-top:10px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:100%;
+background:linear-gradient(90deg,#ef4444,#f97316);
+}
+
+/* PANELS */
+
+.panel{
+margin-top:15px;
+padding:15px;
+background:rgba(255,255,255,0.05);
+border-radius:8px;
+}
+
+/* HISTORY */
+
+.history{
+height:600px;
+overflow:auto;
+}
+
+.history-item{
+padding:12px;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+footer{
+margin-top:30px;
+text-align:center;
+padding:15px;
+background:rgba(0,0,0,0.4);
+}
+
+</style>
+
+<script>
+
+/* SCAN ANIMATION */
+
+function showLoader(){
+
+document.getElementById("loader").style.display="block";
+
+let messages = [
+"Checking URL patterns...",
+"Analyzing phishing indicators...",
+"Consulting threat intelligence...",
+"Running ML model prediction...",
+"Generating risk score..."
+];
+
+let i = 0;
+
+let interval = setInterval(function(){
+
+document.getElementById("scan-status").innerHTML = messages[i];
+
+i++;
+
+if(i >= messages.length){
+clearInterval(interval);
+}
+
+},900);
+
+}
+
+/* PRELOADER FIX */
+
+if(sessionStorage.getItem("visited")){
+document.addEventListener("DOMContentLoaded",function(){
+let pre = document.getElementById("preloader");
+if(pre){
+pre.style.display="none";
+}
+});
+}
+
+window.onload = function(){
+
+sessionStorage.setItem("visited","true");
+
+let progress = 0;
+
+let text = document.getElementById("loadingText");
+
+let interval = setInterval(function(){
+
+progress += 2;
+
+document.getElementById("progress-bar").style.width = progress + "%";
+
+if(progress < 30){
+text.innerHTML = "Loading machine learning model...";
+}
+else if(progress < 60){
+text.innerHTML = "Initializing threat intelligence...";
+}
+else if(progress < 90){
+text.innerHTML = "Preparing security engine...";
+}
+else{
+text.innerHTML = "Launching scanner...";
+}
+
+if(progress >= 100){
+
+clearInterval(interval);
+
+document.getElementById("preloader").style.display="none";
+
+}
+
+},40);
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<!-- PRELOADER -->
+
+<div id="preloader">
+
+<div class="loader-title">AI THREAT SCANNER</div>
+
+<div class="progress-container">
+<div id="progress-bar"></div>
+</div>
+
+<div id="loadingText" class="loading-text">Initializing...</div>
+
+</div>
+
+<nav>
+
+<h2>AI THREAT SCANNER</h2>
+
+</nav>
+
+<div class="container">
+
+<div class="card">
+
+<h1>Website Fraud Detection</h1>
+
+<p>AI powered phishing detection system</p>
+
+<form action="/predict_url" method="post" onsubmit="showLoader()">
+
+<input type="text" name="url" placeholder="Enter website URL" required>
+
+<button type="submit">Scan Website</button>
+
+</form>
+
+<div id="loader" class="loader">
+
+<div class="scan-animation">
+<div class="scan-line"></div>
+</div>
+
+<p>AI scanning website...</p>
+
+<p id="scan-status">Checking URL patterns...</p>
+
+</div>
+
+{% if prediction_text %}
+
+<div class="result">
+
+<h2 style="color:{{color}}">{{prediction_text}}</h2>
+
+<p>Confidence: {{confidence}}%</p>
+
+<p>Threat Level: {{risk}}</p>
+
+<h3>Risk Score: {{risk_score}} / 100</h3>
+
+<div class="progress">
+
+<div class="progress-bar" style="width:{{risk_score}}%"></div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>Security Checks</h3>
+
+<ul>
+
+{% for key,value in checks.items() %}
+<li>{{key}} : {{value}}</li>
+{% endfor %}
+
+</ul>
+
+</div>
+
+<div class="panel">
+
+<h3>AI Explanation</h3>
+
+<ul>
+
+{% for r in reasons %}
+<li>{{r}}</li>
+{% endfor %}
+
+</ul>
+
+</div>
+
+<div class="panel">
+
+<h3>Threat Intelligence</h3>
+
+<p>{{threat_result}}</p>
+
+</div>
+
+<div class="panel">
+
+<h3>Domain Intelligence</h3>
+
+<ul>
+
+{% for key,value in domain_info.items() %}
+<li>{{key}} : {{value}}</li>
+{% endfor %}
+
+</ul>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<div class="card history">
+
+<h2>Scan History</h2>
+
+{% for item in history %}
+
+<div class="history-item">
+
+<strong>{{item.url}}</strong><br>
+
+{{item.result}} ({{item.confidence}}%)
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+<footer>
+
+AI Threat Intelligence Scanner • Cybersecurity Project
+
+</footer>
+
+</body>
+
+</html>
