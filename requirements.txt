@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 flask
 scikit-learn
 requests
 python-whois
 tldextract
+=======
+flask
+scikit-learn
+requests
+python-whois
+tldextract
+>>>>>>> 1e26db98da7558578a738fb043c92bf2966e0683
 gunicorn
